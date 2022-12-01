@@ -9,7 +9,7 @@
  * So we read the list line by line and adds the calories carried by each Elf. Then we save the 
  * highest calorie count and present it to the user. 
  * 
- * @version 0.1
+ * @version 0.2
  * @date 2022-12-01
  * 
  * @copyright Copyright (c) Patrik Hermansson 2022
@@ -22,12 +22,12 @@
 
 int main()
 {
-    int tot_cal, tot_cal_max = 0;
+    int tot_cal=0, tot_cal_max = 0;
     FILE * fp;
     char str[10];
     char *ptr;
     long ret;
-    short elf_no=1;
+    short elf_no=1, elf_max=0;
 
     fp = fopen("data/input", "r");
     if(fp == NULL) 
@@ -35,22 +35,24 @@ int main()
         perror("Error opening file");
         return(-1);
     }
-    while( fgets (str, 60, fp)!=NULL ) 
+    while( fgets (str, 10, fp)!=NULL ) 
     {
         ret = strtol(str, &ptr, 10);    // String to int
         tot_cal += ret;
-
         if(str[0]=='\n')    // An empty line
         {
-            printf ("Elf no: %d, total calories: %d\n", elf_no, tot_cal);
-            if(tot_cal > tot_cal_max)
+            printf ("\nElf no: %d, total calories: %d\n", elf_no, tot_cal);
+            if(tot_cal >= tot_cal_max)
+            {
                 tot_cal_max = tot_cal;
+                elf_max=elf_no;
+            }
             tot_cal=0;
             elf_no++;
         }
     }
-    printf ("totCal: %d\n", tot_cal);   // Do not miss the last one!
+    printf ("Elf no: %d, total calories: %d\n", elf_no, tot_cal); // Do not miss the last one!
     fclose(fp);
-    printf ("Elf no %d has most calories: %d\n", elf_no, tot_cal_max);
+    printf ("Elf no %d has most calories: %d\n", elf_max, tot_cal_max);
     return 0;
 }
